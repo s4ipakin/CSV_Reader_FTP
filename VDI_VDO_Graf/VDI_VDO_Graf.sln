@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDI_VDO_Graf", "VDI_VDO_Graf.csproj", "{0B16095A-6497-482A-B7D9-38CB55C85A7C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B16095A-6497-482A-B7D9-38CB55C85A7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B16095A-6497-482A-B7D9-38CB55C85A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B16095A-6497-482A-B7D9-38CB55C85A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B16095A-6497-482A-B7D9-38CB55C85A7C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F931509F-2DAB-468C-B75B-40384061EC45}
+	EndGlobalSection
+EndGlobal
