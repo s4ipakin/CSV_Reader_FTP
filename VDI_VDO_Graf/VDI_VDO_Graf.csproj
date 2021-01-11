@@ -63,6 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Serialise\PLC_IP.cs" />
     <Compile Include="SeriesCollectionOperate.cs" />
     <Page Include="GrafPage.xaml">
       <SubType>Designer</SubType>

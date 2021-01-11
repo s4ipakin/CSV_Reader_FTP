@@ -23,6 +23,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Drawing.Imaging;
 using System.Net;
+using System.Reflection;
+using VDI_VDO_Graf.Serialise;
+using System.Threading;
 
 namespace VDI_VDO_Graf
 {
@@ -35,10 +38,22 @@ namespace VDI_VDO_Graf
         protected DataSet dataset = new DataSet();
         public event PropertyChangedEventHandler PropertyChanged;
         public SeriesCollection SeriesCollection { get; set; }
+        public PLC_IP IP
+        { set
+            {
+                _ip = value;
+            } 
+        }
+        protected PLC_IP _ip;
         protected string[] _labels;
         protected byte[] hours = new byte[24];
         protected byte[] minutes = new byte[60];
-
+        public static event EventHandler SelectedDateStartChanged;
+        public static event EventHandler SelectedDateStopChanged;
+        public static event EventHandler SelectedHourStartChanged;
+        public static event EventHandler SelectedHourEndChanged;
+        public static event EventHandler SelectedMinuteStartChanged;
+        public static event EventHandler SelectedMinuteEndChanged;
 
         protected static string filePath;
         public static string FilePath
@@ -65,6 +80,10 @@ namespace VDI_VDO_Graf
                 OnPropertyChanged("Labels");
             }
         }
+
+
+
+
 
         public Func<double, string> YFormatter { get; set; }
 
@@ -144,8 +163,84 @@ namespace VDI_VDO_Graf
             this.grid.PreviewMouseRightButtonDown += Grid_PreviewMouseRightButtonDown;
             this.grid.PreviewMouseRightButtonUp += Grid_PreviewMouseRightButtonUp;
             this.Loaded += GrafPage_Loaded;
+            GrafPage.SelectedDateStartChanged += GrafPage_SelectedDateStartChanged;
+            GrafPage.SelectedDateStopChanged += GrafPage_SelectedDateStopChanged;
+            comboBoxHourStart.SelectionChanged += ComboBoxHourStart_SelectionChanged;
+            comboBoxHourEnd.SelectionChanged += ComboBoxHourEnd_SelectionChanged;
+            comboBoxMinuteStart.SelectionChanged += ComboBoxMinuteStart_SelectionChanged;
+            comboBoxMinuteEnd.SelectionChanged += ComboBoxMinuteEnd_SelectionChanged;
+            GrafPage.SelectedHourStartChanged += GrafPage_SelectedHourStartChanged;
+            GrafPage.SelectedHourEndChanged += GrafPage_SelectedHourEndChanged;
+            GrafPage.SelectedMinuteStartChanged += GrafPage_SelectedMinuteStartChanged;
+            GrafPage.SelectedMinuteEndChanged += GrafPage_SelectedMinuteEndChanged;
 
+        }
 
+        
+
+        private void GrafPage_SelectedMinuteEndChanged(object sender, EventArgs e)
+        {
+            comboBoxMinuteEnd.SelectedIndex = minuteEnd;
+        }
+
+        private void GrafPage_SelectedMinuteStartChanged(object sender, EventArgs e)
+        {
+            comboBoxMinuteStart.SelectedIndex = minuteStart;
+        }
+
+        private void GrafPage_SelectedHourEndChanged(object sender, EventArgs e)
+        {
+            comboBoxHourEnd.SelectedIndex = hourEnd;
+        }
+
+        private void GrafPage_SelectedHourStartChanged(object sender, EventArgs e)
+        {
+            //MessageBox.Show(System.IO.Path.GetDirectoryName(
+            //         Assembly.GetAssembly(typeof(GrafPage)).CodeBase));
+            comboBoxHourStart.SelectedIndex = hourStart;
+        }
+
+        private static int minuteEnd;
+        private void ComboBoxMinuteEnd_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            minuteEnd = comboBoxMinuteEnd.SelectedIndex;
+            if (SelectedMinuteEndChanged != null)
+                SelectedMinuteEndChanged(null, EventArgs.Empty);
+        }
+
+        private static int minuteStart;
+        private void ComboBoxMinuteStart_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            minuteStart = comboBoxMinuteStart.SelectedIndex;
+            if (SelectedMinuteStartChanged != null)
+                SelectedMinuteStartChanged(null, EventArgs.Empty);
+        }
+
+        private static int hourEnd;
+        private void ComboBoxHourEnd_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            hourEnd = comboBoxHourEnd.SelectedIndex;
+            if (SelectedHourEndChanged != null)
+                SelectedHourEndChanged(null, EventArgs.Empty);
+        }
+
+        private static int hourStart;
+        private void ComboBoxHourStart_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            hourStart = comboBoxHourStart.SelectedIndex;
+            
+            if (SelectedHourStartChanged != null)
+                SelectedHourStartChanged(null, EventArgs.Empty);
+        }
+
+        private void GrafPage_SelectedDateStopChanged(object sender, EventArgs e)
+        {
+            PickerDataStop.SelectedDate = selectedDateStop;
+        }
+
+        private void GrafPage_SelectedDateStartChanged(object sender, EventArgs e)
+        {
+            pickedData.SelectedDate = selectedDateStart;
         }
 
         private void GrafPage_Loaded(object sender, RoutedEventArgs e)
@@ -228,14 +323,22 @@ namespace VDI_VDO_Graf
 
         }
 
+        private static DateTime? selectedDateStart;
+        private static DateTime? selectedDateStop;
         protected void PickedData_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            PickerDataStop.DisplayDateStart = pickedData.SelectedDate;
+            selectedDateStart = pickedData.SelectedDate;
+            PickerDataStop.DisplayDateStart = selectedDateStart;
+            if (SelectedDateStartChanged != null)
+                SelectedDateStartChanged(null, EventArgs.Empty);
         }
 
         protected void PickerDataStop_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            pickedData.DisplayDateEnd = PickerDataStop.SelectedDate;
+            selectedDateStop = PickerDataStop.SelectedDate;
+            pickedData.DisplayDateEnd = selectedDateStop;
+            if (SelectedDateStopChanged != null)
+                SelectedDateStopChanged(null, EventArgs.Empty);
         }
 
 
@@ -284,54 +387,71 @@ namespace VDI_VDO_Graf
 
         protected void btnFromDays_Click(object sender, RoutedEventArgs e)
         {
-
-
-
-            try
+            this.LblLoading.Visibility = Visibility.Visible;
+            if (selectedDateStart != null && selectedDateStop != null)
             {
-                csvDataTable = CSV_DataTable.ConvertCSVtoDataTable(filePath);
-            }
-            catch (Exception ex) { }
+                Task downloadTask = Task.Run(() =>
+                {
+                    DownloadFileFTP();
+                    try
+                    {
+                        csvDataTable = CSV_DataTable.ConvertCSVtoDataTable(filePath);
+                    }
+                    catch (Exception ex) { System.Windows.MessageBox.Show(ex.Message); }
 
-            SeriesCollectionOperate seriesCollectionOperate = new SeriesCollectionOperate();
-            try
-            {
-                _ = LoopTask(seriesCollectionOperate, arSeries.Length);
+                    SeriesCollectionOperate seriesCollectionOperate = new SeriesCollectionOperate();
+                    try
+                    {
+                        //_ = LoopTask(seriesCollectionOperate, arSeries.Length);
+                        Dispatcher.Invoke(() => DrawChart(seriesCollectionOperate, arSeries.Length));
+                    }
+                    catch (Exception ex) { System.Windows.MessageBox.Show(ex.Message); }
+                });
+                
             }
-            catch (Exception ex) { /*System.Windows.MessageBox.Show(ex.Message);*/ }
-            //DownloadFileFTP();
+            else
+            {
+                MessageBox.Show("Выберете дату начала и конца графика");
+            }
         }
 
+        
 
         private void DownloadFileFTP()
         {
-            string inputfilepath = @"D:\Delete\her.csv";
-            //string inputfilepath = @"D:\Delete\error_ini.xml";
-            string ftphost = "192.168.1.17";
+            /*string inputfilepath*/
+            filePath = Directory.GetCurrentDirectory();//@"D:\Delete\her.csv";
+            /*inputfilepath*/
+            filePath = /*inputfilepath*/filePath + @"\log.csv";
+            //string ftphost = "192.168.1.17";
+            string ftphost = _ip.IP_192.ToString() + "." + _ip.IP_168.ToString() + "." + _ip.IP_1.ToString() + "." + _ip.IP_17.ToString();
+
             //string ftpfilepath = "/media/SD_Card/Trend/log_2020_06_12.csv";
-            string ftpfilepath = "//media/SD_Card/Trend/log_2020_06_12.csv";
+            string ftpfilepath = "//media/SD_Card/Trend/log.csv";
+            //ftpfilepath = "//media/SD_Card/Trend/";
 
             string ftpfullpath = "ftp://" + ftphost + ftpfilepath;
+
+            
 
             using (WebClient request = new WebClient())
             {
                 request.Credentials = new NetworkCredential("admin", "wago");
-
-                byte[] fileData = request.DownloadData(ftpfullpath);
-
-                using (FileStream file = File.Create(inputfilepath))
-                {
-                    file.Write(fileData, 0, fileData.Length);
-                    file.Close();
-                }
-                MessageBox.Show("Download Complete");
+                request.DownloadFile(ftpfullpath, "log.csv");
+                //byte[] fileData = request.DownloadData(ftpfullpath);                
+                //using (FileStream file = File.Create(/*inputfilepath*/filePath))
+                //{
+                //    file.Write(fileData, 0, fileData.Length);
+                //    file.Close();
+                //}
             }
         }
 
-
+        
 
         private Task SetCollections(SeriesCollectionOperate seriesCollectionOperate, int i)
         {
+            
             Labels = seriesCollectionOperate.SetValues(SeriesCollection[i].Values, csvDataTable, 1, 2, arSeries[i].Column,
                     (System.DateTime)pickedData.SelectedDate, (System.DateTime)PickerDataStop.SelectedDate, comboBoxHourStart.SelectedIndex,
                     comboBoxHourEnd.SelectedIndex, comboBoxMinuteStart.SelectedIndex, comboBoxMinuteEnd.SelectedIndex);
@@ -355,6 +475,15 @@ namespace VDI_VDO_Graf
                 tasks.Add(SetCollections(seriesCollectionOperate, i));
             }
             await Task.WhenAll(tasks);
+        }
+
+        private void DrawChart(SeriesCollectionOperate seriesCollectionOperate, int nomber)
+        {
+            this.LblLoading.Visibility = Visibility.Hidden;
+            for (int i = 0; i < nomber; i++)
+            {
+                SetCollections(seriesCollectionOperate, i);
+            }
         }
     }
 }

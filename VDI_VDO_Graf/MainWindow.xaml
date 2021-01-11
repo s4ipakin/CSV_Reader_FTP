@@ -8,13 +8,17 @@
         Title="MainWindow" Height="900" Width="1600">
     <Grid>
         <StackPanel Height="48" VerticalAlignment="Bottom" RenderTransformOrigin="0.499,0.542" Orientation="Horizontal">
-            <Button Content="Температура" MinWidth="200" Click="MainBtcClck"/>
-            <Button Content="Давление" MinWidth="200" Margin="10,0,0,0" Click="PressureBtnClk"/>
-            <Button Content="Электропроводность" MinWidth="200" Margin="10,0,0,0" Click="btnCondClck" />
-            <Button Content="Скорость протока" MinWidth="200" Margin="10,0,0,0" Click="btnFlawClck" />
-            <Button Content="Уровень" MinWidth="200" Margin="10,0,0,0" Click="btnLewelClck" />
-            <Button Content="Содержание углерода" MinWidth="200" Margin="10,0,0,0" Click="Button_Click" />
-            <Button Content="Указать лог-файл" MinWidth="100" Margin="10,0,0,0" Click="btnChooseFile_clk" />
+            <Button Content="Температура" MinWidth="100" Margin="10,0,0,0" Click="MainBtcClck"/>
+            <Button Content="Давление" MinWidth="100" Margin="10,0,0,0" Click="PressureBtnClk"/>
+            <Button Content="Электропроводность" MinWidth="150" Margin="10,0,0,0" Click="btnCondClck" />
+            <Button Content="Скорость протока" MinWidth="130" Margin="10,0,0,0" Click="btnFlawClck" />
+            <Button Content="Уровень" MinWidth="100" Margin="10,0,0,0" Click="btnLewelClck" />
+            <Button Content="Содержание углерода" MinWidth="150" Margin="10,0,0,0" Click="Button_Click" />
+            <Button Content="Задать IP" MinWidth="100" Height="30" Margin="50,0,0,0" Click="Button_Click_1" />
+            <TextBox x:Name="IP_192" Width="50" Height="25" Margin="10,0,0,0" TextAlignment="Center"/>
+            <TextBox x:Name="IP_168" Width="50" Height="25" Margin="10,0,0,0" TextAlignment="Center"/>
+            <TextBox x:Name="IP_1" Width="50" Height="25" Margin="10,0,0,0" TextAlignment="Center"/>
+            <TextBox x:Name="IP_17" Width="50" Height="25" Margin="10,0,0,0" TextAlignment="Center"/>
         </StackPanel>
         <Frame Name="Main" NavigationUIVisibility="Hidden"/>
     </Grid>

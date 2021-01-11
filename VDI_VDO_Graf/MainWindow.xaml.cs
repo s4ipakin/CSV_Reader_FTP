@@ -15,6 +15,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VDI_VDO_Graf.GrafSettings;
+using VDI_VDO_Graf.Serialise;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace VDI_VDO_Graf
 {
@@ -30,6 +33,9 @@ namespace VDI_VDO_Graf
         GrafPage temperature;
         GrafPage pressure;
         GrafPage conductivity;
+
+        PLC_IP iP;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -42,8 +48,17 @@ namespace VDI_VDO_Graf
             flaw = new GrafPage(grafSets[GrafType.Flaw]);
             level = new GrafPage(grafSets[GrafType.Level]);
             cO2 = new GrafPage(grafSets[GrafType.CO2]);
+            iP = new PLC_IP(192, 168, 1, 18);
+            DeserialiseIP();
+            temperature.IP = iP;
+            pressure.IP = iP;
+            conductivity.IP = iP;
+            flaw.IP = iP;
+            level.IP = iP;
+            cO2.IP = iP;
 
             Main.Content = temperature;
+            
         }
 
         private void InitializeSets(Dictionary<GrafType, GrafSet> grafSets)
@@ -119,6 +134,61 @@ namespace VDI_VDO_Graf
             Thread thread = new Thread(() => this.Dispatcher.Invoke(() => Main.Content = cO2));
             thread.IsBackground = true;
             thread.Start();
+
+        }
+
+        private void SerialiseIP(PLC_IP iP)
+        {
+            XmlSerializer formatter = new XmlSerializer(typeof(PLC_IP));
+
+            // получаем поток, куда будем записывать сериализованный объект
+            using (FileStream fs = new FileStream("ip.xml", FileMode.OpenOrCreate))
+            {
+                formatter.Serialize(fs, iP);
+            }
+        }
+
+        private void DeserialiseIP()
+        {
+            XmlSerializer formatter = new XmlSerializer(typeof(PLC_IP));
+            try
+            {
+                using (FileStream fs = new FileStream("ip.xml", FileMode.OpenOrCreate))
+                {
+                    PLC_IP newIP = (PLC_IP)formatter.Deserialize(fs);
+                    if (newIP.IP_192 != 0)
+                    {
+                        iP = newIP;
+                        IP_192.Text = iP.IP_192.ToString();
+                        IP_168.Text = iP.IP_168.ToString();
+                        IP_1.Text = iP.IP_1.ToString();
+                        IP_17.Text = iP.IP_17.ToString();
+                    }
+                }
+            }
+            catch (Exception ex) { }
+            
+
+            
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                PLC_IP newIP = new PLC_IP(Convert.ToInt32(IP_192.Text), Convert.ToInt32(IP_168.Text), Convert.ToInt32(IP_1.Text), Convert.ToInt32(IP_17.Text));
+                SerialiseIP(newIP);
+                iP = newIP;
+                temperature.IP = iP;
+                pressure.IP = iP;
+                conductivity.IP = iP;
+                flaw.IP = iP;
+                level.IP = iP;
+                cO2.IP = iP;
+                
+            }
+            catch(Exception ex) { }
+            
 
         }
     }
