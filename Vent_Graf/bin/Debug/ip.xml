@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<PLC_IP xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <IP_192>192</IP_192>
+  <IP_168>168</IP_168>
+  <IP_1>1</IP_1>
+  <IP_17>17</IP_17>
+</PLC_IP>

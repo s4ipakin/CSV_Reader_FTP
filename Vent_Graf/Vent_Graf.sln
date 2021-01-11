@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vent_Graf", "Vent_Graf.csproj", "{7926920A-12BB-40D2-A66B-6AEA78118B51}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7926920A-12BB-40D2-A66B-6AEA78118B51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7926920A-12BB-40D2-A66B-6AEA78118B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7926920A-12BB-40D2-A66B-6AEA78118B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7926920A-12BB-40D2-A66B-6AEA78118B51}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FB2FEC61-39C0-4161-B92E-94A08340DB0F}
+	EndGlobalSection
+EndGlobal

@@ -166,10 +166,7 @@ namespace VDI_VDO_Graf
                     }
                 }
             }
-            catch (Exception ex) { }
-            
-
-            
+            catch (Exception ex) { }           
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -188,8 +185,6 @@ namespace VDI_VDO_Graf
                 
             }
             catch(Exception ex) { }
-            
-
         }
     }
 }

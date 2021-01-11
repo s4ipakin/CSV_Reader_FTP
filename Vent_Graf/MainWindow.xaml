@@ -1,0 +1,24 @@
+﻿<Window x:Class="Vent_Graf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Vent_Graf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="900" Width="1600">
+    <Grid>
+        <StackPanel Height="48" VerticalAlignment="Bottom" RenderTransformOrigin="0.499,0.542" Margin="10,0,0,0" Orientation="Horizontal">
+            <Button Content="Температура K1" MinWidth="150" Click="MainBtcClck"/>
+            <Button Content="Температура P1" MinWidth="150" Margin="10,0,0,0" Click="PressureBtnClk"/>
+            <Button Content="Влажность" MinWidth="150" Margin="10,0,0,0" Click="btnCondClck" />
+            <Button Content="Скорость протока" MinWidth="150" Margin="10,0,0,0" Click="btnFlawClck" />
+            <Button Content="Перепад давления" MinWidth="150" Margin="10,0,0,0" Click="btnLewelClck" />
+            <Button Content="Задать IP" MinWidth="100" Height="30" Margin="50,0,0,0" Click="Button_Click_1" />
+            <TextBox x:Name="IP_192" Width="50" Height="25" Margin="10,0,0,0" TextAlignment="Center"/>
+            <TextBox x:Name="IP_168" Width="50" Height="25" Margin="10,0,0,0" TextAlignment="Center"/>
+            <TextBox x:Name="IP_1" Width="50" Height="25" Margin="10,0,0,0" TextAlignment="Center"/>
+            <TextBox x:Name="IP_17" Width="50" Height="25" Margin="10,0,0,0" TextAlignment="Center"/>
+        </StackPanel>
+        <Frame Name="Main" NavigationUIVisibility="Hidden"/>
+    </Grid>
+</Window>
