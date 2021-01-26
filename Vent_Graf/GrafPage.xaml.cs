@@ -425,7 +425,7 @@ namespace Vent_Graf
             string ftphost = _ip.IP_192.ToString() + "." + _ip.IP_168.ToString() + "." + _ip.IP_1.ToString() + "." + _ip.IP_17.ToString();
 
             //string ftpfilepath = "/media/SD_Card/Trend/log_2020_06_12.csv";
-            string ftpfilepath = "//media/SD_Card/Trend/log.csv";
+            string ftpfilepath = "//media/SD_Card/Logs/log.csv";
             //ftpfilepath = "//media/SD_Card/Trend/";
 
             string ftpfullpath = "ftp://" + ftphost + ftpfilepath;

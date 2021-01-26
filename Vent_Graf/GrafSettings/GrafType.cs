@@ -96,8 +96,8 @@ namespace Vent_Graf.GrafSettings
         {
             return new GrafSeries[]
             {
-                new GrafSeries("Скорость воздушного потока К1", 25),
-                new GrafSeries("Скорость воздушного потока П1", 27)
+                new GrafSeries("Скорость воздушного потока К1", 29),
+                new GrafSeries("Скорость воздушного потока П1", 31)
             };
         }
     }
